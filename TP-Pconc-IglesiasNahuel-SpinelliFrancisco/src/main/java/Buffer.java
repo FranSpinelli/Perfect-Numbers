@@ -52,12 +52,12 @@ public class Buffer {
 
     private Boolean isEmpty(){
 
-        return this.nextIn == this.nextOut;
+        return this.nextIn.equals(this.nextOut);
     }
 
     private Boolean isFull(){
 
-        return this.next(this.nextIn) == this.nextOut;
+        return this.next(this.nextIn).equals(this.nextOut);
     }
 
     private Integer next(Integer i){
