@@ -10,6 +10,23 @@ public class PerfectWorker extends Thread {
     }
 
     public void run() {
+
+        Boolean keep_running = true;
+
+        while(keep_running){
+            BigInteger bigNumber = this.buffer.pop();
+
+            if(bigNumber.compareTo(BigInteger.valueOf(0)) >= 0){
+
+                if(this.isPerfect(bigNumber)){
+                    System.out.println(bigNumber + " is a Perfect Number");
+                }
+            } else {
+                keep_running = false;
+                //TODO: agregar Barrier
+                //TODO: como matar thread
+            }
+        }
     }
 
     public Boolean isPerfect(BigInteger aNumber) {
