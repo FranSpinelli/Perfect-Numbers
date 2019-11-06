@@ -19,7 +19,7 @@ public class ThreadPool {
 
         for(Integer i = 0; i < threadsToCreate; i++){
 
-            new PerfectWorker(buffer).start();
+            new PerfectWorker(buffer,barrier).start();
         }
     }
 

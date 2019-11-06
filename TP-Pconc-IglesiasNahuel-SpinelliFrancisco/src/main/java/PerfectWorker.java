@@ -3,10 +3,12 @@ import java.math.BigInteger;
 public class PerfectWorker extends Thread {
 
     private Buffer buffer;
+    private Barrier barrier;
 
-    public PerfectWorker(Buffer unBuffer) {
+    public PerfectWorker(Buffer unBuffer, Barrier unaBarrier) {
 
         this.buffer = unBuffer;
+        this.barrier = unaBarrier;
     }
 
     public void run() {
@@ -21,9 +23,11 @@ public class PerfectWorker extends Thread {
                 if(this.isPerfect(bigNumber)){
                     System.out.println(bigNumber + " is a Perfect Number");
                 }
+
             } else {
                 keep_running = false;
-                //TODO: agregar Barrier
+                //System.out.println("antes de entrar a la barrera");
+                barrier.notifyBarrier();
                 //TODO: como matar thread
             }
         }
@@ -31,7 +35,6 @@ public class PerfectWorker extends Thread {
 
     public Boolean isPerfect(BigInteger aNumber) {
 
-        {
             // To store sum of divisors
             BigInteger sum = BigInteger.valueOf(1);
 
@@ -49,6 +52,5 @@ public class PerfectWorker extends Thread {
             // If sum of divisors is equal to
             // n, then n is a perfect number
             return sum.equals(aNumber) && !aNumber.equals(BigInteger.valueOf(1));
-        }
     }
 }
