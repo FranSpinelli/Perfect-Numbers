@@ -2,16 +2,19 @@ public class Barrier {
 
     private Integer finishedThreads;
     private Integer threadsToWait;
+    private Integer pasada;
 
     public Barrier(Integer n){
 
+        this.pasada = 1;
         this.threadsToWait = n;
         this.finishedThreads = 0;
     }
 
     public synchronized void waitBarrier(){
 
-        while(this.finishedThreads < this.threadsToWait){
+        finishedThreads++;
+        while(this.finishedThreads < this.threadsToWait + 1){
 
             try{
                 this.wait();
@@ -20,12 +23,14 @@ public class Barrier {
                 e.printStackTrace();
             }
         }
+        this.notifyAll();
+
         //System.out.println("Barrera destrabada");
     }
 
-    public synchronized void notifyBarrier(){
+    /*public synchronized void notifyBarrier(){
 
         this.finishedThreads ++;
         this.notify();
-    }
+    }*/
 }

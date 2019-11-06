@@ -7,14 +7,19 @@ public class MainClass {
 
     private ThreadPool threadPool;
     private Barrier barrier;
+    private Buffer buffer;
+
     private List<BigInteger> numberList;
+    private Integer numberOfThreadsToCreate;
 
     public MainClass(List<BigInteger> listToWorkWith, Integer numberOfThreads) {
 
-        barrier = new Barrier(numberOfThreads);
-        threadPool = new ThreadPool(this.barrier, 10, numberOfThreads);
+        this.barrier = new Barrier(numberOfThreads);
+        this.buffer = new Buffer(10);
+        this.threadPool = new ThreadPool(this.barrier, this.buffer, numberOfThreads);
 
-        numberList = listToWorkWith;
+        this.numberList = listToWorkWith;
+        this.numberOfThreadsToCreate = numberOfThreads;
     }
 
     public void runMain() {
@@ -24,12 +29,38 @@ public class MainClass {
         threadPool.runWorkers();
         threadPool.loadData(numberList);
 
-        barrier.waitBarrier();
+        barrier.waitBarrier(); // espero que todos hayan procesado los datos
+
+        List<BigInteger> finalList= recolectarDatos();
+
+        //barrier.waitBarrier(); // espero que todos hayan terminado de pushear los datos
+
+        System.out.println("Numeros perfectos de la lista recibida: \n\n" + finalList);
 
         long endTime = System.nanoTime();
         long executionDuration = (endTime - startTime) / 1000000;
 
-        System.out.println("tiempo de ejecucion total: " + executionDuration + " ms");
+        System.out.println("\ntiempo de ejecucion total: " + executionDuration + " ms");
+    }
+
+    private ArrayList<BigInteger> recolectarDatos() {
+
+        ArrayList<BigInteger> generatedList = new ArrayList<BigInteger>();
+        Integer threadsThatFinishedToUploadData = 0;
+
+        while(threadsThatFinishedToUploadData < numberOfThreadsToCreate){
+
+            BigInteger numberPopped = this.buffer.pop();
+            if(numberPopped.compareTo(BigInteger.valueOf(0)) == 0){
+
+                threadsThatFinishedToUploadData++;
+            }else{
+
+                generatedList.add(numberPopped);
+            }
+        }
+
+        return generatedList;
     }
 
 //--------------------------------------------------------------------------------------------------------
@@ -38,7 +69,7 @@ public class MainClass {
 
         ArrayList<BigInteger> listOfNumbers = createList();
 
-        MainClass mainClass = new MainClass(listOfNumbers, 200);
+        MainClass mainClass = new MainClass(listOfNumbers, 1);
 
         mainClass.runMain();
     }

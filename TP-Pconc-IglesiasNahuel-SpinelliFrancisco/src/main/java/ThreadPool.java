@@ -8,10 +8,10 @@ public class ThreadPool {
     private Buffer buffer;
     private Integer threadsToCreate;
 
-    public ThreadPool(Barrier aBarrier, Integer aBufferSize, Integer aQuantityOfThreads){
+    public ThreadPool(Barrier aBarrier, Buffer aBuffer, Integer aQuantityOfThreads){
 
         barrier = aBarrier;
-        buffer = new Buffer(aBufferSize);
+        buffer = aBuffer;
         threadsToCreate = aQuantityOfThreads;
     }
 
@@ -29,7 +29,9 @@ public class ThreadPool {
         while(dataIterator.hasNext()){
 
             buffer.push(dataIterator.next());
+
         }
+
         this.loadNegativeNumbers();
     }
 

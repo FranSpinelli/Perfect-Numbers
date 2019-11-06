@@ -1,9 +1,13 @@
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class PerfectWorker extends Thread {
 
     private Buffer buffer;
     private Barrier barrier;
+    private Integer id;
 
     public PerfectWorker(Buffer aBuffer, Barrier aBarrier) {
 
@@ -14,6 +18,7 @@ public class PerfectWorker extends Thread {
     public void run() {
 
         Boolean keep_running = true;
+        ArrayList<BigInteger> perfectNumbersFound = new ArrayList<BigInteger>();
 
         while(keep_running){
             BigInteger bigNumber = this.buffer.pop();
@@ -21,16 +26,28 @@ public class PerfectWorker extends Thread {
             if(bigNumber.compareTo(BigInteger.valueOf(0)) >= 0){
 
                 if(this.isPerfect(bigNumber)){
-                    System.out.println(bigNumber + " is a Perfect Number");
+
+                    perfectNumbersFound.add(bigNumber);
                 }
 
             } else {
                 keep_running = false;
-                //System.out.println("antes de entrar a la barrera");
-                barrier.notifyBarrier();
+                barrier.waitBarrier(); //notifico que ya termine de procesar y empiezo a subir mis perfect numbers
+                this.putPerfectNumberInBuffer(perfectNumbersFound);
+                //barrier.waitBarrier(); //notifico que ya termine de subir los perfect numbers y termine mi ejecucion
                 //TODO: como matar thread
             }
         }
+    }
+
+    private void putPerfectNumberInBuffer(List<BigInteger> aList) {
+
+        Iterator<BigInteger> aListIterator = aList.iterator();
+        while(aListIterator.hasNext()){
+
+            buffer.push(aListIterator.next());
+        }
+        buffer.push(BigInteger.valueOf(0));
     }
 
     private Boolean isPerfect(BigInteger aNumber) {
