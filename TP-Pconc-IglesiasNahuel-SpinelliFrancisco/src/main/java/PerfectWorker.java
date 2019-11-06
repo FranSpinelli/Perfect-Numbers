@@ -5,10 +5,10 @@ public class PerfectWorker extends Thread {
     private Buffer buffer;
     private Barrier barrier;
 
-    public PerfectWorker(Buffer unBuffer, Barrier unaBarrier) {
+    public PerfectWorker(Buffer aBuffer, Barrier aBarrier) {
 
-        this.buffer = unBuffer;
-        this.barrier = unaBarrier;
+        this.buffer = aBuffer;
+        this.barrier = aBarrier;
     }
 
     public void run() {
@@ -33,7 +33,7 @@ public class PerfectWorker extends Thread {
         }
     }
 
-    public Boolean isPerfect(BigInteger aNumber) {
+    private Boolean isPerfect(BigInteger aNumber) {
 
             // To store sum of divisors
             BigInteger sum = BigInteger.valueOf(1);
