@@ -26,19 +26,18 @@ public class PerfectWorker extends Thread {
 
             } else {
                 keep_running = false;
-                //System.out.println("antes de entrar a la barrera");
                 barrier.notifyBarrier();
-                //TODO: como matar thread
+                return;
             }
         }
     }
 
     private Boolean isPerfect(BigInteger aNumber) {
 
-            // To store sum of divisors
+            //Guarda la suma de los divisores
             BigInteger sum = BigInteger.valueOf(1);
 
-            // Find all divisors and add them
+            // Encuentra todos los divisores y los suma
             for (BigInteger i = BigInteger.valueOf(2); i.multiply(i).compareTo(aNumber) <= 0; i = i.add(BigInteger.valueOf(1))) {
 
                 if (aNumber.mod(i).equals(BigInteger.valueOf(0))) {
@@ -49,8 +48,7 @@ public class PerfectWorker extends Thread {
                         sum = sum.add(i);
                 }
             }
-            // If sum of divisors is equal to
-            // n, then n is a perfect number
+            // Si la suma de los divisores es n, n = numero perfecto
             return sum.equals(aNumber) && !aNumber.equals(BigInteger.valueOf(1));
     }
 }

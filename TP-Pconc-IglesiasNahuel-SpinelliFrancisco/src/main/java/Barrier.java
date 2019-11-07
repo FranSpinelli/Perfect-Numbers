@@ -20,7 +20,6 @@ public class Barrier {
                 e.printStackTrace();
             }
         }
-        //System.out.println("Barrera destrabada");
     }
 
     public synchronized void notifyBarrier(){
