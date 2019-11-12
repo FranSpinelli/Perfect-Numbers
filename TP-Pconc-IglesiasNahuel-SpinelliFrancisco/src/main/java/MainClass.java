@@ -12,19 +12,20 @@ public class MainClass {
     private List<BigInteger> numberList;
     private Integer numberOfThreadsToCreate;
 
-    public MainClass(List<BigInteger> listToWorkWith, Integer numberOfThreads) {
+    public MainClass(List<BigInteger> listToWorkWith, Integer numberOfThreads, Integer aSize) {
 
         this.barrier = new Barrier(numberOfThreads);
-        this.buffer = new Buffer(10);
+        this.buffer = new Buffer(aSize);
         this.threadPool = new ThreadPool(this.barrier, this.buffer, numberOfThreads);
 
         this.numberList = listToWorkWith;
         this.numberOfThreadsToCreate = numberOfThreads;
     }
 
-    public void runMain() {
+    public MyPair<List<BigInteger>, Long> runMain() {
 
         long startTime = System.nanoTime();
+        MyPair<List<BigInteger>, Long> resolution = new MyPair();
 
         threadPool.runWorkers();
         threadPool.loadData(numberList);
@@ -35,12 +36,17 @@ public class MainClass {
 
         //barrier.waitBarrier(); // espero que todos hayan terminado de pushear los datos
 
-        System.out.println("Numeros perfectos de la lista recibida: \n\n" + finalList);
+        //System.out.println("Numeros perfectos de la lista recibida: \n\n" + finalList);
 
         long endTime = System.nanoTime();
         long executionDuration = (endTime - startTime) / 1000000;
 
-        System.out.println("\ntiempo de ejecucion total: " + executionDuration + " ms");
+        //System.out.println("\ntiempo de ejecucion total: " + executionDuration + " ms");
+
+        resolution.setX(finalList);
+        resolution.setY(executionDuration);
+
+        return resolution;
     }
 
     private ArrayList<BigInteger> recolectarDatos() {
@@ -68,10 +74,13 @@ public class MainClass {
     public static void main(String[] args) {
 
         ArrayList<BigInteger> listOfNumbers = createList();
+        MyPair<List<BigInteger>, Long> mainResult;
 
-        MainClass mainClass = new MainClass(listOfNumbers, 1);
+        MainClass mainClass = new MainClass(listOfNumbers, 20, 50);
 
-        mainClass.runMain();
+        mainResult = mainClass.runMain();
+        System.out.println("Numeros perfectos de la lista recibida: \n\n" + mainResult.getX());
+        System.out.println("\ntiempo de ejecucion total: " + mainResult.getY() + " ms");
     }
 
     private static ArrayList<BigInteger> createList() {
