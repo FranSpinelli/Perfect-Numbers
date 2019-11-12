@@ -7,7 +7,6 @@ public class PerfectWorker extends Thread {
 
     private Buffer buffer;
     private Barrier barrier;
-    private Integer id;
 
     public PerfectWorker(Buffer aBuffer, Barrier aBarrier) {
 
